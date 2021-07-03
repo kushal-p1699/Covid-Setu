@@ -38,7 +38,26 @@ public class VerifyOTP extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_otp);
 
-        // initialize
+        Initialize();
+
+        // display phone number
+        displayPhoneNumber.setText(String.format(
+                "+91-%s", getIntent().getStringExtra("phone-number")
+        ));
+
+        // verify entered otp
+        VerifyOtp();
+
+        // move to next input field
+        MoveToNextOtpField();
+
+        // resend otp
+        ResendOtp();
+
+
+    }
+
+    private void Initialize() {
         otp1 = (EditText) findViewById(R.id.edit_text_otp1);
         otp2 = (EditText) findViewById(R.id.edit_text_otp2);
         otp3 = (EditText) findViewById(R.id.edit_text_otp3);
@@ -53,14 +72,42 @@ public class VerifyOTP extends AppCompatActivity {
 
         progressBar = (ProgressBar) findViewById(R.id.profressbar_verify_otp);
 
-        // display phone number
-        displayPhoneNumber.setText(String.format(
-                "+91-%s", getIntent().getStringExtra("phone-number")
-        ));
-
         // get otp backend from login activity
         otpBackend = getIntent().getStringExtra("backend-otp");
+    }
 
+    private void ResendOtp() {
+        resendOtp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                        "+91" + getIntent().getStringExtra("phone-number"),
+                        10,
+                        TimeUnit.SECONDS,
+                        VerifyOTP.this,
+                        new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                            @Override
+                            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+
+                            }
+
+                            @Override
+                            public void onVerificationFailed(@NonNull FirebaseException e) {
+
+                            }
+
+                            @Override
+                            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                                otpBackend = s; //new otp
+                                Toast.makeText(VerifyOTP.this, "OTP sent successfully!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                );
+            }
+        });
+    }
+
+    private void VerifyOtp() {
         btnVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +118,6 @@ public class VerifyOTP extends AppCompatActivity {
                         && !otp4.getText().toString().trim().isEmpty()
                         && !otp5.getText().toString().trim().isEmpty()
                         && !otp6.getText().toString().trim().isEmpty()) {
-//                    Toast.makeText(VerifyOTP.this, "otp verify", Toast.LENGTH_SHORT).show();
 
                     String enteredOtp = otp1.getText().toString().trim() +
                             otp2.getText().toString().trim() +
@@ -111,39 +157,6 @@ public class VerifyOTP extends AppCompatActivity {
                 } else {
                     Toast.makeText(VerifyOTP.this, "Please enter all numbers", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        // move to next input field
-        MoveToNextOtpField();
-
-        // resend otp
-        resendOtp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                        "+91" + getIntent().getStringExtra("phone-number"),
-                        60,
-                        TimeUnit.SECONDS,
-                        VerifyOTP.this,
-                        new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                            @Override
-                            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-
-                            }
-
-                            @Override
-                            public void onVerificationFailed(@NonNull FirebaseException e) {
-
-                            }
-
-                            @Override
-                            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                                otpBackend = s; //new otp
-                                Toast.makeText(VerifyOTP.this, "OTP sent successfully!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                );
             }
         });
     }

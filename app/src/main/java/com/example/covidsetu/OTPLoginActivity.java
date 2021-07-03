@@ -6,13 +6,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
@@ -22,20 +28,40 @@ public class OTPLoginActivity extends AppCompatActivity {
 
     private EditText phoneNumber;
     private Button btnGetOTP;
-
     private ProgressBar progressBar;
+
+    private FirebaseAuth fAuth;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otplogin);
 
-        // initialize fields
+        Initialize();
+
+        // check if user is present
+        if (user != null) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+
+        GenerateOTP();
+
+    }
+
+    private void Initialize() {
         phoneNumber = (EditText) findViewById(R.id.edit_text_phone_number);
         btnGetOTP = (Button) findViewById(R.id.btn_get_otp);
 
         progressBar = (ProgressBar) findViewById(R.id.progressbar_otp_login);
 
+        fAuth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    private void GenerateOTP() {
         btnGetOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,7 +74,7 @@ public class OTPLoginActivity extends AppCompatActivity {
 
                         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                                 "+91" + phoneNumber.getText().toString().trim(),
-                                60,
+                                10,
                                 TimeUnit.SECONDS,
                                 OTPLoginActivity.this,
                                 new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -56,7 +82,6 @@ public class OTPLoginActivity extends AppCompatActivity {
                                     public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                                         progressBar.setVisibility(View.GONE);
                                         btnGetOTP.setVisibility(View.VISIBLE);
-
                                     }
 
                                     @Override
