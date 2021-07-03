@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "953577652588",
+    "project_id": "covid-setu",
+    "storage_bucket": "covid-setu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:953577652588:android:1ca36c5dfc3565fe5fb349",
+        "android_client_info": {
+          "package_name": "com.example.covidsetu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "953577652588-h0j3sks4nui8e2h5ubk1la2egi7b237v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.covidsetu",
+            "certificate_hash": "d8b9214ac85ac03350b75d9442995671d7296c6b"
+          }
+        },
+        {
+          "client_id": "953577652588-f9p7r72g9ft1ghi5uo8studmkq6kcmrb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANoGfrJNdJrlkR9G-hvm_36R0EMFNobk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "953577652588-f9p7r72g9ft1ghi5uo8studmkq6kcmrb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

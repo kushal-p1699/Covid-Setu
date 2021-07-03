@@ -10,8 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CovidSetu">
         <activity android:name=".VerifyOTP"></activity>
-        <activity android:name=".OTPLoginActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" />
+        <activity android:name=".OTPLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
