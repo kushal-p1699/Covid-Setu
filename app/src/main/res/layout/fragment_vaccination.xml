@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".VaccinationFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="fragment item 1" />
+        android:layout_height="match_parent">
+
+        <!-- dropdown for selecting states  -->
+        <Spinner
+            android:id="@+id/spinner_states"
+            android:layout_width="290dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginEnd="60dp"
+            android:dropDownWidth="250dp"
+            android:textSize="24sp"
+
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- dropdown for selecting states  -->
+        <Spinner
+            android:id="@+id/spinner_district"
+            android:layout_width="290dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:dropDownWidth="250dp"
+
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/spinner_states"
+            app:layout_constraintStart_toStartOf="@+id/spinner_states"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_states" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
