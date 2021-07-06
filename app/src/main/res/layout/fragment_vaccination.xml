@@ -40,6 +40,41 @@
             app:layout_constraintEnd_toEndOf="@+id/spinner_states"
             app:layout_constraintStart_toStartOf="@+id/spinner_states"
             app:layout_constraintTop_toBottomOf="@+id/spinner_states" />
+
+        <EditText
+            android:id="@+id/et_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:hint="31-03-2021"
+            app:layout_constraintEnd_toEndOf="@+id/spinner_district"
+            app:layout_constraintHorizontal_bias="0.508"
+            app:layout_constraintStart_toStartOf="@+id/spinner_district"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_district" />
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="Submit"
+            app:layout_constraintEnd_toEndOf="@+id/et_date"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="@+id/et_date"
+            app:layout_constraintTop_toBottomOf="@+id/et_date" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_submit">
+
+
+        </androidx.recyclerview.widget.RecyclerView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
