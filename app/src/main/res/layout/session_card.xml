@@ -1,35 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="10dp"
     android:elevation="4dp"
-    app:cardUseCompatPadding="true">
+    app:cardBackgroundColor="#99ebff"
+    app:cardCornerRadius="10dp"
+    app:cardUseCompatPadding="true"
+    android:outlineAmbientShadowColor="@color/black">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="0dp">
+
+        <!-- center name -->
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="center Name"
             android:id="@+id/center_name"
-            android:textSize="24sp"
-            android:textStyle="bold"/>
+            android:layout_width="188dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:text="center Name"
+            android:textAllCaps="true"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- divider -->
+        <View
+            android:id="@+id/view2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="2dp"
+            android:background="@android:color/black"
+            app:layout_constraintEnd_toEndOf="@+id/center_name"
+            app:layout_constraintStart_toStartOf="@+id/center_name"
+            app:layout_constraintTop_toBottomOf="@+id/center_name" />
+
+        <!-- address -->
 
         <TextView
-            android:paddingTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/center_state"
-            android:textSize="24sp"
-            android:layout_below="@id/center_name"
-            android:text="State Name"
-            android:textStyle="bold"/>
+            android:id="@+id/center_address"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="24dp"
+            android:text="center Adress"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline4"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/center_name"
+            app:layout_constraintTop_toBottomOf="@+id/center_name"
+            app:layout_constraintVertical_bias="0.13999999" />
 
-    </RelativeLayout>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="150dp" />
+
+        <!-- free / paid -->
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/vaccine_cost"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:src="@color/black"
+                app:shapeAppearanceOverlay="@style/VaccineCost" />
+
+            <TextView
+                android:id="@+id/tv_vaccine_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/vaccine_cost"
+                android:layout_alignTop="@+id/vaccine_cost"
+                android:layout_alignRight="@+id/vaccine_cost"
+                android:layout_alignBottom="@+id/vaccine_cost"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="-2dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="center"
+                android:paddingLeft="35dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="FREE"
+                android:textColor="@color/white" />
+
+
+        </RelativeLayout>
+
+
+        <!-- View location -->
+        <RelativeLayout
+            android:id="@+id/relativeLayout3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="@+id/relativeLayout2"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout2">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ViewLocation"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:src="@drawable/mapsfeaturedimage"
+                app:shapeAppearanceOverlay="@style/ViewLocation"/>
+
+            <!-- TODO: add toolpick here -->
+        </RelativeLayout>
+
+        <!-- book slots -->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout3">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/shapeableImageView3"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:src="@color/black"
+                app:shapeAppearanceOverlay="@style/ViewSlots" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/shapeableImageView3"
+                android:layout_alignTop="@+id/shapeableImageView3"
+                android:layout_alignRight="@+id/shapeableImageView3"
+                android:layout_alignBottom="@+id/shapeableImageView3">
+
+                <TextView
+                    android:id="@+id/tv_slot_details"
+                    android:layout_width="125dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="45dp"
+                    android:text="SLOT DETAILS"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <!-- expand icon -->
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:src="@drawable/ic_baseline_expand_more_24" />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="88dp" />
+
+
+        <!-- vaccine Name and age -->
+        <TextView
+            android:id="@+id/tv_vaccine_name_and_age"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/backgroundbox"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="COVAXIN | Age : 45+"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/center_name"
+            app:layout_constraintTop_toBottomOf="@+id/center_address"
+            app:layout_constraintVertical_bias="0.76" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.cardview.widget.CardView>

@@ -5,11 +5,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-public class PageAdapater extends FragmentPagerAdapter {
+public class TabLayoutPageAdapter extends FragmentPagerAdapter {
 
     int tabCount;
 
-    public PageAdapater(@NonNull FragmentManager fm, int behavior) {
+    public TabLayoutPageAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
         tabCount = behavior;
     }

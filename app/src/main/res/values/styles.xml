@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="circular">
+        <item name="cornerSize">10%</item>
+    </style>
+
+    <style name="VaccineCost">
+
+        <item name="cornerSizeBottomLeft">120%</item>
+        <item name="cornerFamilyBottomLeft">cut</item>
+    </style>
+
+    <style name="ViewSlots">
+        <item name="cornerSizeTopLeft">120%</item>
+        <item name="cornerFamilyTopLeft">cut</item>
+    </style>
+
+    <style name="ViewLocation">
+        <item name="strokeColor">@color/black</item>
+        <item name="strokeWidth">5dp</item>
+    </style>
+</resources>

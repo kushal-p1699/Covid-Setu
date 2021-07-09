@@ -1,10 +1,13 @@
 package com.example.covidsetu;
 
+import android.Manifest;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +29,8 @@ import java.util.concurrent.TimeUnit;
 
 public class OTPLoginActivity extends AppCompatActivity {
 
+    private static final int MY_PERMISSIONS_REQUEST = 1000;
+
     private EditText phoneNumber;
     private Button btnGetOTP;
     private ProgressBar progressBar;
@@ -38,6 +43,14 @@ public class OTPLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otplogin);
 
+        // check for all permissions
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+            }, MY_PERMISSIONS_REQUEST);
+
+        }
+
         Initialize();
 
         // check if user is present
@@ -47,7 +60,12 @@ public class OTPLoginActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        GenerateOTP();
+        btnGetOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GenerateOTP();
+            }
+        });
 
     }
 
@@ -62,57 +80,73 @@ public class OTPLoginActivity extends AppCompatActivity {
     }
 
     private void GenerateOTP() {
-        btnGetOTP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String _phoneNumber = phoneNumber.getText().toString().trim();
-                if (!_phoneNumber.isEmpty()) {
-                    if (_phoneNumber.length() == 10) {
+        String _phoneNumber = phoneNumber.getText().toString().trim();
+        if (!_phoneNumber.isEmpty()) {
+            if (_phoneNumber.length() == 10) {
 
-                        progressBar.setVisibility(View.VISIBLE);
-                        btnGetOTP.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                btnGetOTP.setVisibility(View.INVISIBLE);
 
-                        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                                "+91" + phoneNumber.getText().toString().trim(),
-                                10,
-                                TimeUnit.SECONDS,
-                                OTPLoginActivity.this,
-                                new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                                    @Override
-                                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                                        progressBar.setVisibility(View.GONE);
-                                        btnGetOTP.setVisibility(View.VISIBLE);
-                                    }
+                PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                        "+91" + phoneNumber.getText().toString().trim(),
+                        10,
+                        TimeUnit.SECONDS,
+                        OTPLoginActivity.this,
+                        new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                            @Override
+                            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                                progressBar.setVisibility(View.GONE);
+                                btnGetOTP.setVisibility(View.VISIBLE);
 
-                                    @Override
-                                    public void onVerificationFailed(@NonNull FirebaseException e) {
-                                        progressBar.setVisibility(View.GONE);
-                                        btnGetOTP.setVisibility(View.VISIBLE);
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
 
-                                        Toast.makeText(OTPLoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
+                            @Override
+                            public void onVerificationFailed(@NonNull FirebaseException e) {
+                                progressBar.setVisibility(View.GONE);
+                                btnGetOTP.setVisibility(View.VISIBLE);
 
-                                    @Override
-                                    public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                                        progressBar.setVisibility(View.GONE);
-                                        btnGetOTP.setVisibility(View.VISIBLE);
+                                Toast.makeText(OTPLoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
 
-                                        Intent intent = new Intent(getApplicationContext(), VerifyOTP.class);
-                                        intent.putExtra("phone-number", _phoneNumber);
-                                        intent.putExtra("backend-otp", s);
-                                        startActivity(intent);
-                                    }
-                                }
-                        );
+                            @Override
+                            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                                progressBar.setVisibility(View.GONE);
+                                btnGetOTP.setVisibility(View.VISIBLE);
+
+                                Toast.makeText(getApplicationContext(), _phoneNumber, Toast.LENGTH_SHORT).show();
+
+                                Intent intent = new Intent(getApplicationContext(), VerifyOTP.class);
+                                intent.putExtra("phone-number", _phoneNumber);
+                                intent.putExtra("backend-otp", s);
+                                startActivity(intent);
+                            }
+                        }
+                );
 
 
-                    } else {
-                        Toast.makeText(OTPLoginActivity.this, "Please enter correct number", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(OTPLoginActivity.this, "Enter mobile number", Toast.LENGTH_SHORT).show();
-                }
+            } else {
+                Toast.makeText(OTPLoginActivity.this, "Please enter correct number", Toast.LENGTH_SHORT).show();
             }
-        });
+        } else {
+            Toast.makeText(OTPLoginActivity.this, "Enter mobile number", Toast.LENGTH_SHORT).show();
+        }
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST:
+
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    finish();
+                }
+                return;
+        }
+    }
+
 }

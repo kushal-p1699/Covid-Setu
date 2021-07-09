@@ -25,6 +25,8 @@ public class SessionModel {
     int min_age_limit;
     String vaccine;
 
+    int district_id;
+
     List<String> slots = new ArrayList<>();
 
     public int getAvailable_capacity() {
@@ -195,4 +197,20 @@ public class SessionModel {
         this.district_name = district_name;
     }
 
+    public String getDetailAddress(){
+        String address = getBlock_name().trim()+","+getDistrict_name().trim()+","+getState_name().trim()+"-"+getPincode().trim();
+        return address.trim();
+    }
+
+    public String getVaccineNameAndAge(){
+        return getVaccine() +" | "+" Age: "+getMin_age_limit()+"+";
+    }
+
+    public int getDistrict_id() {
+        return district_id;
+    }
+
+    public void setDistrict_id(int district_id) {
+        this.district_id = district_id;
+    }
 }
