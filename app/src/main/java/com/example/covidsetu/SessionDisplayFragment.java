@@ -128,7 +128,7 @@ public class SessionDisplayFragment extends Fragment {
 
             }
 
-            myAdapter = new MyAdapter(model_list);
+            myAdapter = new MyAdapter(getContext(), model_list);
             recyclerView.setAdapter(myAdapter);
 
 

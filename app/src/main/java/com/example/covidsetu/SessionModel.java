@@ -213,4 +213,9 @@ public class SessionModel {
     public void setDistrict_id(int district_id) {
         this.district_id = district_id;
     }
+
+    public String getLocationUrl(){
+        String url = "https://www.google.com/maps/search/?api=1&query="+getLat()+","+getLong();
+        return url;
+    }
 }

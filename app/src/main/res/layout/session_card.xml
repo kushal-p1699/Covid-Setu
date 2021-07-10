@@ -58,6 +58,7 @@
             android:textStyle="bold"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="15sp"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="@+id/center_name"

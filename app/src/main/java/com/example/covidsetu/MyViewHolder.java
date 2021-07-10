@@ -11,7 +11,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 public class MyViewHolder extends RecyclerView.ViewHolder {
 
     TextView center_name, center_address, vaccine_name_and_age, vaccine_cost;
-    ShapeableImageView vaccine_cost_img;
+    ShapeableImageView vaccine_cost_img, vaccine_location;
 
     public MyViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -21,6 +21,7 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
         vaccine_cost = (TextView) itemView.findViewById(R.id.tv_vaccine_cost);
 
         vaccine_cost_img = (ShapeableImageView) itemView.findViewById(R.id.vaccine_cost);
+        vaccine_location = (ShapeableImageView) itemView.findViewById(R.id.ViewLocation);
 
     }
 }
