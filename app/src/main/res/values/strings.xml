@@ -9,5 +9,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="vaccination_centers">VACCINATION CENTERS</string>
+    <string name="find_available_slots_by_entering_district_name">SEARCH VACCINE CENTER BY DISTRICT NAME</string>
+    <string name="find_available_slots_by_entering_pincode">SEARCH VACCINE CENTER BY PINCODE</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

@@ -8,6 +8,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.solver.state.State;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.transition.AutoTransition;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +35,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -35,7 +43,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -44,6 +57,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -51,6 +65,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class VaccinationFragment extends Fragment {
 
@@ -60,12 +75,16 @@ public class VaccinationFragment extends Fragment {
     final private String TAG = "VACCINATION FRAGMENT";
 
     private Spinner stateSpinner, districtSpinner;
-    private EditText dateEntered;
+    private TextView selectDate;
     private Button btnSubmit;
 
     private Map<String, Integer> district_map;
     private List<String> district_list;
     int district_id;
+
+    private String selectedDateString;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,8 +100,7 @@ public class VaccinationFragment extends Fragment {
 
         btnSubmit = (Button) v.findViewById(R.id.btn_submit);
 
-        dateEntered = (EditText) v.findViewById(R.id.et_date);
-        dateEntered.setText(GetTodaysDate());
+        selectDate = (TextView) v.findViewById(R.id.et_date);
 
     }
 
@@ -104,6 +122,44 @@ public class VaccinationFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_vaccination, container, false);
 
+        ConstraintLayout expandableCardView = (ConstraintLayout) view.findViewById(R.id.expand_search_by_district_id);
+        expandableCardView.setVisibility(View.GONE);
+
+        CardView mainCardView = (CardView) view.findViewById(R.id.search_by_district_id);
+        mainCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(expandableCardView.getVisibility() == View.GONE){
+                    TransitionManager.beginDelayedTransition(mainCardView, new AutoTransition());
+                    expandableCardView.setVisibility(View.VISIBLE);
+
+                }else{
+                    TransitionManager.beginDelayedTransition(mainCardView, new AutoTransition());
+                    expandableCardView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        ConstraintLayout expand_search_by_pincode = (ConstraintLayout) view.findViewById(R.id.expand_search_by_pincode);
+        expand_search_by_pincode.setVisibility(View.GONE);
+
+        CardView search_by_pincode = (CardView) view.findViewById(R.id.search_by_pincode);
+        search_by_pincode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(expand_search_by_pincode.getVisibility() == View.GONE){
+                    TransitionManager.beginDelayedTransition(search_by_pincode, new AutoTransition());
+                    expand_search_by_pincode.setVisibility(View.VISIBLE);
+
+                }else{
+                    TransitionManager.beginDelayedTransition(search_by_pincode, new AutoTransition());
+                    expand_search_by_pincode.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
+
         Initilization(view);
 
         // set the state names to spinner
@@ -111,8 +167,6 @@ public class VaccinationFragment extends Fragment {
 
         // get selected state
         GetSelectedState();
-
-        Toast.makeText(getContext(), "Date : " + dateEntered.getText().toString(), Toast.LENGTH_SHORT).show();
 
         // read district id
         districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -128,22 +182,63 @@ public class VaccinationFragment extends Fragment {
             }
         });
 
-//        Log.d("SESSION FRAGMENT OUT",""+district_id);
+        // Calendar Object
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.clear();
+
+        // today's time
+        long todayTime = MaterialDatePicker.todayInUtcMilliseconds();
+        calendar.setTimeInMillis(todayTime);
+
+        // start bound in milli sec
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+        long startBound = calendar.getTimeInMillis();
+        // end bound
+
+        CalendarConstraints.Builder calenderConstraints =  new CalendarConstraints.Builder();
+        calenderConstraints.setStart(startBound);
+
+
+        //date picker builder
+        MaterialDatePicker.Builder materialDatePickerBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDatePickerBuilder.setTitleText("Select a date");
+
+        materialDatePickerBuilder.setSelection(todayTime);
+        materialDatePickerBuilder.setCalendarConstraints(calenderConstraints.build());
+        final MaterialDatePicker materialDatePicker = materialDatePickerBuilder.build();
+
+        // testing
+
+        selectDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                materialDatePicker.show(getActivity().getSupportFragmentManager(), "DATE_PICKER");
+            }
+        });
+
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                selectedDateString = materialDatePicker.getHeaderText();
+                selectDate.setText(selectedDateString);
+
+            }
+        });
 
 
         GetVaccineSessionByDistrict();
 
-        Button btnLogout = (Button) view.findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "logged out", Toast.LENGTH_SHORT).show();
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getContext(), OTPLoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        });
+//        Button btnLogout = (Button) view.findViewById(R.id.btnLogout);
+//        btnLogout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getContext(), "logged out", Toast.LENGTH_SHORT).show();
+//                FirebaseAuth.getInstance().signOut();
+//                Intent intent = new Intent(getContext(), OTPLoginActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(intent);
+//            }
+//        });
 
         return view;
     }
@@ -154,7 +249,8 @@ public class VaccinationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // get district id and date
-                String date = dateEntered.getText().toString().trim();
+                // TODO add date here
+                String date = getSelectedDate();
 
                 // send data to session fragment using bundel
                 Log.d("SESSION FRAGMENT1", district_id + " , " + date);
@@ -177,6 +273,43 @@ public class VaccinationFragment extends Fragment {
             }
         });
 
+    }
+
+    private String getSelectedDate() {
+        String day = "";
+        String month = "";
+        String year = "";
+
+        String dateArr[] = selectedDateString.split(" ");
+        if(dateArr[0].length() == 0){
+            day = "0"+dateArr[0];
+        }else{
+            day = dateArr[0];
+        }
+
+        month = getMonthNumber(dateArr[1]);
+        year = dateArr[2];
+
+        return day +"-"+month+"-"+year;
+    }
+
+    private String getMonthNumber(String month) {
+        switch (month){
+            case "Jan" : return "01";
+            case "Feb" : return "02";
+            case "Mar" : return "03";
+            case "Apr" : return "04";
+            case "May" : return "05";
+            case "Jun" : return "06";
+            case "Jul" : return "07";
+            case "Aug" : return "08";
+            case "Sep" : return "09";
+            case "Oct" : return "10";
+            case "Nov" : return "11";
+            case "Dec" : return "12";
+        }
+
+        return "-1";
     }
 
     private void GetDistrictID() {
@@ -280,4 +413,5 @@ public class VaccinationFragment extends Fragment {
 
         stateSpinner.setAdapter(stringArrayAdapter);
     }
+
 }
